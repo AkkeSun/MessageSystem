@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+    zookeeper:
+        container_name: zookeeper
+        image: wurstmeister/zookeeper
+        environment:
+            TZ: Asia/Seoul
+        ports:
+            - "2181:2181"
+
+    kafka:
+        container_name: kafka
+        image: wurstmeister/kafka
+        ports:
+            - "9092:9092"
+        environment:
+            TZ: Asia/Seoul
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            # 외부에서 Kafka 에 접속할 때 사용되는 IP (배포시 외부 IP 등록)
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+            # 카프카 브로커가 클라이언트 연결을 수신 할때 사용하는 리스너 설정
+            KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+            KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+            KAFKA_ADVERTISED_PORT: 9092
+            KAFKA_CREATE_TOPICS: "test:3:1"   # Topic명:Partition개수:Replica개수
+
+            ### 보안설정 ###
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+            KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+            KAFKA_SECURITY_PROTOCOL: PLAINTEXT
+            KAFKA_INTERCEPTORS: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor,io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+            KAFKA_AUTHORIZERS: org.apache.kafka.server.authorizer.SimpleAclAuthorizer
+            # 혀옹가능한 host 지정
+            KAFKA_AUTHORIZER_PROPERTIES: "allow.hosts=192.168.12.91,192.168.12.92,192.168.12.93,127.0.0.1"
+
+        depends_on:
+            - zookeeper
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+

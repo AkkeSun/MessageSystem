@@ -1,3 +1,6 @@
 rootProject.name = 'MessageSystem'
 include 'rabbitmq_producer'
 include 'rabbitmq_consumer'
+include 'kafka_producer'
+include 'kafka_consumer'
+

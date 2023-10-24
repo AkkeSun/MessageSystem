@@ -20,10 +20,10 @@ public class KafkaProducerConfig {
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        // org.springframework.kafka.support.serializer.StringSerializer
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "158.179.160.200:9092, 152.67.221.250:9092");
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.ACKS_CONFIG, "all"); // default = 1
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
@@ -37,9 +37,4 @@ public class KafkaProducerConfig {
         return new ObjectMapper();
     }
 
-    // ------ 테스트용 토픽 생성 ----------
-    @Bean
-    public NewTopic myTopic1() {
-        return new NewTopic("od-topic", 3, (short) 1);
-    }
 }

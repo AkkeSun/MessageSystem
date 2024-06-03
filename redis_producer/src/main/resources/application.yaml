@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: redis_producer
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+server:
+  port: 9001
+
